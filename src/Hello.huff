@@ -1,9 +1,38 @@
-#define macro MAIN() = takes(0) returns(0){
-    0x6f
-    push1 0x00// [0,111]
-    mstore
-    0x20
-    push1 0x00// [0,32]
-    return
 
+//interface
+#define function setNumber(uint256) nonpayable returns (uint256)
+#define function getNumber() view returns (uint256)
+/* Storage Slots */
+#define constant NUMBER = FREE_STORAGE_POINTER()
+
+#define macro MAIN() = takes(0) returns(0){
+    0x00 calldataload // Load the first 32 bytes of the call data || stack : [call data]
+    0xe0 shr // Shift right by 224 bits to get the first 4 bytes || stack : [function selector]
+    dup1 __FUNC_SIG("setNumber(uint256)") eq // Compare with the function selector for setNumber || stack : [1 OR 0]
+    setNum jumpi // If it is setNumber(), jump to setNum -> it will check the stack is 0 or 1 , if 1 jump to setNum
+
+    dup1 __FUNC_SIG("getNumber()") eq
+    getNum jumpi // If it is getNumber(), jump to getNum -> it will check the stack is 0 or 1 , if 1 jump to getNum
+    
+    setNum:
+        SET_NUMBER() 
+
+    getNum:
+        GET_NUMBER()  
+    
+    stop // Stop execution
+    // If the function selector does not match any of the defined functions, stop execution
+}
+
+#define macro SET_NUMBER() = takes(1) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value]
+    [NUMBER]
+    sstore // Store the value in storage || stack : []
+    stop
+}
+#define macro GET_NUMBER() = takes(0) returns(1){
+    [NUMBER]
+    sload // Load the value from storage || stack : [value]
+    0x00 mstore // Store the value in memory at location 0x00 || stack : [value]
+    0x20 0x00 return // return the value in memory at location 0x00 with length 0x20 (32 bytes) || stack : []
 }
