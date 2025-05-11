@@ -1,66 +1,36 @@
-## Foundry
+## Huff-Math
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**This repo consists of two contracts: one for storing and retrieving numbers, and the other for performing basic math operations. It also helps Huff beginners learn about it.**
 
-Foundry consists of:
+## Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+**This project is a simple demonstration of Huff, an assembly-like language for the Ethereum Virtual Machine (EVM). It includes two main contracts:**
 
-## Documentation
+    Store and Retrieve Contract: This contract allows you to store a number and retrieve it.
 
-https://book.getfoundry.sh/
+    Math Operations Contract: This contract provides basic arithmetic operations such as addition, subtraction, multiplication, division, and modulus.
 
-## Usage
+The project is designed to help beginners understand Huff and how it works with calldata, memory, and the EVM stack. Despite the simplicity of the operations, working with Huff requires a deeper understanding of the Ethereum stack and low-level operations.
 
-### Build
+## Features
 
-```shell
-$ forge build
-```
+**Number Storage Contract:**
 
-### Test
+    `setNumber(uint256)` : Stores a number in the contract.
 
-```shell
-$ forge test
-```
+     `getNumber()` : Retrieves the stored number.
 
-### Format
+**Math Operations Contract:**
 
-```shell
-$ forge fmt
-```
+    `addNum(uint256, uint256)` : Adds two numbers.
 
-### Gas Snapshots
+    `subNum(uint256, uint256)` : Subtracts the second number from the first.
 
-```shell
-$ forge snapshot
-```
+    `mulNum(uint256, uint256)` : Multiplies two numbers.
 
-### Anvil
+    `divNum(uint256, uint256)` : Divides the first number by the second.
 
-```shell
-$ anvil
-```
+    `modNum(uint256, uint256)` : Calculates the modulus of the first number with the second.
 
-### Deploy
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+**⚠️ Note: you should install huff compiler and foundry-huff to execute this program**
