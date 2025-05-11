@@ -6,3 +6,5 @@ libs = ["lib"]
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 [profile.default.huff]
 enabled = true
+ffi=true
+evm_version = 'shanghai'

@@ -1,9 +1,22 @@
 
 //interface
-#define function setNumber(uint256) nonpayable returns (uint256)
+#define function setNumber(uint256) nonpayable returns ()
 #define function getNumber() view returns (uint256)
 /* Storage Slots */
 #define constant NUMBER = FREE_STORAGE_POINTER()
+
+#define macro SET_NUMBER() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value]
+    [NUMBER]
+    sstore // Store the value in storage || stack : []
+    stop
+}
+#define macro GET_NUMBER() = takes(0) returns(0){
+    [NUMBER]
+    sload // Load the value from storage || stack : [value]
+    0x00 mstore // Store the value in memory at location 0x00 || stack : [value]
+    0x20 0x00 return // return the value in memory at location 0x00 with length 0x20 (32 bytes) || stack : []
+}
 
 #define macro MAIN() = takes(0) returns(0){
     0x00 calldataload // Load the first 32 bytes of the call data || stack : [call data]
@@ -24,15 +37,3 @@
     // If the function selector does not match any of the defined functions, stop execution
 }
 
-#define macro SET_NUMBER() = takes(1) returns(0){
-    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value]
-    [NUMBER]
-    sstore // Store the value in storage || stack : []
-    stop
-}
-#define macro GET_NUMBER() = takes(0) returns(1){
-    [NUMBER]
-    sload // Load the value from storage || stack : [value]
-    0x00 mstore // Store the value in memory at location 0x00 || stack : [value]
-    0x20 0x00 return // return the value in memory at location 0x00 with length 0x20 (32 bytes) || stack : []
-}

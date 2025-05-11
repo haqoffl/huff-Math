@@ -1,0 +1,82 @@
+
+//interface 
+#define function addNum(uint256,uint256) nonpayable returns (uint256)
+#define function subNum(uint256,uint256) nonpayable returns (uint256)
+#define function mulNum(uint256,uint256) nonpayable returns (uint256)
+#define function divNum(uint256,uint256) nonpayable returns (uint256)
+#define function modNum(uint256,uint256) nonpayable returns (uint256)
+
+#define macro ADD_NUM() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
+    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    add // Add the two values || stack : [result]
+    0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
+    0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
+}
+
+#define macro SUB_NUM() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
+    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    swap1 // Swap the top two values on the stack || stack : [value2, value1]
+    sub // Subtract the two values || stack : [result]
+    0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
+    0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
+}
+#define macro MUL_NUM() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
+    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    mul // Multiply the two values || stack : [result]
+    0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
+    0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
+}
+#define macro DIV_NUM() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
+    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    swap1 // Swap the top two values on the stack || stack : [value2, value1]
+    div // Divide the two values || stack : [result]
+    0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
+    0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
+
+}
+#define macro MOD_NUM() = takes(0) returns(0){
+    0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
+    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    swap1 // Swap the top two values on the stack || stack : [value2, value1]
+    mod // Modulus of the two values || stack : [result]
+    0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
+    0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
+}
+
+#define macro MAIN() = takes(0) returns(0){
+    0x00 calldataload // Load the first 32 bytes of the call data || stack : [call data]
+    0xe0 shr // Shift right by 224 bits to get the first 4 bytes || stack : [function selector]
+    dup1 __FUNC_SIG("addNum(uint256,uint256)") eq // Compare with the function selector for add || stack : [1 OR 0]
+    addNumber jumpi // If it is add(), jump to add -> it will check the stack is 0 or 1 , if 1 jump to add
+
+    dup1 __FUNC_SIG("subNum(uint256,uint256)") eq
+    subNumber jumpi // If it is sub(), jump to sub -> it will check the stack is 0 or 1 , if 1 jump to sub
+    
+    dup1 __FUNC_SIG("mulNum(uint256,uint256)") eq
+    mulNumber jumpi // If it is mul(), jump to mul -> it will check the stack is 0 or 1 , if 1 jump to mul
+    dup1 __FUNC_SIG("divNum(uint256,uint256)") eq
+    divNumber jumpi // If it is div(), jump to div -> it will check the stack is 0 or 1 , if 1 jump to div
+    dup1 __FUNC_SIG("modNum(uint256,uint256)") eq
+    modNumber jumpi // If it is mod(), jump to mod -> it will check the stack is 0 or 1 , if 1 jump to mod
+    
+    addNumber:
+        ADD_NUM() 
+        
+
+    subNumber:
+        SUB_NUM()
+
+    mulNumber:
+        MUL_NUM()
+    divNumber:
+        DIV_NUM()
+    modNumber:
+        MOD_NUM()
+    
+
+    stop // Stop execution
+}
