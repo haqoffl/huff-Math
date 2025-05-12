@@ -8,7 +8,7 @@
 
 #define macro ADD_NUM() = takes(0) returns(0){
     0x04 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1]
-    0x24 calldataload // skipping the first 4 bytes of the call data that means function selector || stack : [value1, value2]
+    0x24 calldataload // skipping the first 4 bytes of the call data(2nd argument) that means function selector || stack : [value1, value2]
     add // Add the two values || stack : [result]
     0x00 mstore // Store the result in memory at location 0x00 || stack : [], memory : [result]
     0x20 0x00 return // return the result in memory at location 0x00 with length 0x20 (32 bytes) || stack : [], memory : []
