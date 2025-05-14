@@ -11,7 +11,7 @@ function setUp() public {
     console.log("bonding curve contract deployed at:", address(curve));
 }
 
-function testStore() public {
+function testPrice() public {
     uint slope = 0.03 * 1e18;
     uint circulation = 1000;
     uint basePrice = 0.1 * 1e18;
@@ -20,14 +20,27 @@ function testStore() public {
 }
 
 function testCostOfPurchasingToken() public {
+    uint gasStart = gasleft();
+    console.log("Gas start:", gasStart);
     uint slope = 0.003 * 1e18;
     uint circulation = 1;
     uint purchaseToken = 1;
     uint basePrice = 0.1 * 1e18;
-    uint cost = curve.costOfPurchasingToken(slope, circulation, purchaseToken, basePrice);
+    uint fee = 0.0003 * 1e18;
+    uint cost = curve.costOfPurchasingToken(slope, circulation, purchaseToken, basePrice,fee);
     console.log("Cost of purchasing token is:", cost);
+    console.log("Gas used:", gasStart - gasleft());
 }
 
+function testCostOfSellingToken() public {
+    uint slope = 0.003 * 1e18;
+    uint circulation = 1;
+    uint sellToken = 1;
+    uint basePrice = 0.1 * 1e18;
+    uint fee = 0.0003 * 1e18;
+    uint cost = curve.costOfSellingToken(slope, circulation, sellToken, basePrice,fee);
+    console.log("Cost of selling token is:", cost);
+}
 }
 
 
